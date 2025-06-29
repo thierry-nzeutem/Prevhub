@@ -1,0 +1,2 @@
+Tests Phase 1.4 - Sun Jun 29 13:55:19 EDT 2025
+[0;34m[INFO][0m === TEST 1: Vérification des fichiers Phase 1.4 ===

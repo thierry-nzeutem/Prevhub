@@ -1,0 +1,296 @@
+{
+  "timestamp": "2025-06-29T17:58:14.781Z",
+  "phase": "1.4",
+  "tests": [
+    {
+      "name": "Taille ClientsManager.jsx",
+      "value": 37,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille clients-api.js",
+      "value": 25,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille init-clients-db.sql",
+      "value": 20,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille App_with_clients.jsx",
+      "value": 31,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille deploy-phase-1-4.sh",
+      "value": 14,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille README_PHASE_1_4.md",
+      "value": 12,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille PHASE_1_4_SUMMARY.md",
+      "value": 9,
+      "unit": "KB",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "name": "Taille totale Phase 1.4",
+      "value": 148,
+      "unit": "KB",
+      "status": "PASS",
+      "details": "Taille appropriée pour une phase complète"
+    },
+    {
+      "name": "Fonctions ClientsManager",
+      "value": 9,
+      "unit": "",
+      "status": "WARNING",
+      "details": "Fonctionnalités limitées"
+    },
+    {
+      "name": "Hooks React",
+      "value": 13,
+      "unit": "",
+      "status": "PASS",
+      "details": "useState, useEffect requis minimum"
+    },
+    {
+      "name": "États gérés",
+      "value": 12,
+      "unit": "",
+      "status": "PASS",
+      "details": "Gestion d'état complexe requise"
+    },
+    {
+      "name": "Effets de bord",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "useEffect requis pour chargement données"
+    },
+    {
+      "name": "Lignes de code ClientsManager",
+      "value": 855,
+      "unit": "",
+      "status": "PASS",
+      "details": "Composant complet"
+    },
+    {
+      "name": "Endpoints API",
+      "value": 13,
+      "unit": "",
+      "status": "PASS",
+      "details": "CRUD complet pour 2 entités + stats"
+    },
+    {
+      "name": "Middlewares sécurité",
+      "value": 7,
+      "unit": "",
+      "status": "PASS",
+      "details": "Protection des routes sensibles"
+    },
+    {
+      "name": "Authentification JWT",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Sécurité requise"
+    },
+    {
+      "name": "Configuration CORS",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Cross-origin requis"
+    },
+    {
+      "name": "Validation données",
+      "value": 0,
+      "unit": "",
+      "status": "WARNING",
+      "details": "Validation côté serveur recommandée"
+    },
+    {
+      "name": "Tables créées",
+      "value": 2,
+      "unit": "",
+      "status": "PASS",
+      "details": "companies et etablissements requis"
+    },
+    {
+      "name": "Index de performance",
+      "value": 13,
+      "unit": "",
+      "status": "PASS",
+      "details": "Optimisation des requêtes"
+    },
+    {
+      "name": "Contraintes définies",
+      "value": 3,
+      "unit": "",
+      "status": "PASS",
+      "details": "Intégrité des données"
+    },
+    {
+      "name": "Fonctions SQL",
+      "value": 3,
+      "unit": "",
+      "status": "PASS",
+      "details": "Fonctions utilitaires"
+    },
+    {
+      "name": "Vues créées",
+      "value": 2,
+      "unit": "",
+      "status": "PASS",
+      "details": "Vues pour statistiques"
+    },
+    {
+      "name": "Triggers automatiques",
+      "value": 2,
+      "unit": "",
+      "status": "PASS",
+      "details": "Mise à jour automatique"
+    },
+    {
+      "name": "Données de démonstration",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Données de test requises"
+    },
+    {
+      "name": "Documentation complète",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Sections essentielles requises"
+    },
+    {
+      "name": "Exemples fournis",
+      "value": 0,
+      "unit": "",
+      "status": "WARNING",
+      "details": "Exemples facilitent l'utilisation"
+    },
+    {
+      "name": "Guide de dépannage",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Support utilisateur"
+    },
+    {
+      "name": "Mots dans README",
+      "value": 1552,
+      "unit": "",
+      "status": "WARNING",
+      "details": "Documentation succincte"
+    },
+    {
+      "name": "Métriques dans résumé",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Métriques quantifient les réalisations"
+    },
+    {
+      "name": "Réalisations listées",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Résumé des accomplissements requis"
+    },
+    {
+      "name": "Conclusion présente",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Conclusion synthétise les résultats"
+    },
+    {
+      "name": "Fonctions essentielles",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Test, sauvegarde, rollback requis"
+    },
+    {
+      "name": "Options disponibles",
+      "value": 24,
+      "unit": "",
+      "status": "PASS",
+      "details": "Flexibilité de déploiement"
+    },
+    {
+      "name": "Aide intégrée",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Documentation utilisateur"
+    },
+    {
+      "name": "Gestion d'erreurs",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Robustesse du script"
+    },
+    {
+      "name": "Interface colorée",
+      "value": 1,
+      "unit": "",
+      "status": "PASS",
+      "details": "Expérience utilisateur améliorée"
+    },
+    {
+      "name": "Tests réussis",
+      "value": 33,
+      "unit": "/37",
+      "status": "PASS",
+      "details": "Taux de réussite: 89%"
+    },
+    {
+      "name": "Score de qualité",
+      "value": 95,
+      "unit": "%",
+      "status": "PASS",
+      "details": "Qualité globale du code"
+    },
+    {
+      "name": "Taille totale archive",
+      "value": 148,
+      "unit": "KB",
+      "status": "PASS",
+      "details": "Taille appropriée pour une phase complète"
+    }
+  ],
+  "summary": {
+    "totalTests": 37,
+    "passedTests": 33,
+    "warningTests": 4,
+    "failedTests": 0,
+    "successRate": 89,
+    "qualityScore": 95,
+    "totalSizeKB": 148,
+    "status": "EXCELLENT"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "name": "prevhub-tasks-module",
+  "version": "2.2.0",
+  "description": "Module de gestion des tâches avec workflow pour ERP PrevHub",
+  "main": "tasks-api.js",
+  "scripts": {
+    "start": "node tasks-api.js",
+    "dev": "nodemon tasks-api.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "build": "npm run lint && npm test",
+    "deploy": "npm run build && pm2 restart tasks-api || pm2 start tasks-api.js --name tasks-api"
+  },
+  "keywords": [
+    "tasks",
+    "workflow",
+    "erp",
+    "prevhub",
+    "management",
+    "kanban",
+    "agile",
+    "scrum"
+  ],
+  "author": "PrevHub Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^6.10.0",
+    "bcryptjs": "^2.4.3",
+    "helmet": "^7.0.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "joi": "^17.9.2",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0",
+    "moment": "^2.29.4",
+    "lodash": "^4.17.21",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.2",
+    "supertest": "^6.3.3",
+    "eslint": "^8.46.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prevhub/tasks-module.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prevhub/tasks-module/issues"
+  },
+  "homepage": "https://github.com/prevhub/tasks-module#readme"
+}
+
