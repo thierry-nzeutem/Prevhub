@@ -1,0 +1,36 @@
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: prevhub-postgres
+    environment:
+      POSTGRES_DB: prevhub
+      POSTGRES_USER: prevhub_user
+      POSTGRES_PASSWORD: prevhub_secure_password_2024
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: prevhub-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  # Serveur web simple
+  nginx:
+    image: nginx:alpine
+    container_name: prevhub-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

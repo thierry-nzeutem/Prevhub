@@ -1,0 +1,75 @@
+{
+  "name": "prevhub-backend",
+  "version": "1.0.0",
+  "description": "Backend API pour ERP PrevHub - Prévéris",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "migrate": "node src/scripts/migrate.js",
+    "seed": "node src/scripts/seed.js"
+  },
+  "keywords": [
+    "erp",
+    "prevention",
+    "incendie",
+    "accessibilite",
+    "nodejs",
+    "api"
+  ],
+  "author": "Manus AI",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^6.8.1",
+    "express-validator": "^7.0.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.1",
+    "pg-pool": "^3.6.1",
+    "redis": "^4.6.7",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.1",
+    "pdf-parse": "^1.1.1",
+    "mammoth": "^1.5.1",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.3",
+    "axios": "^1.4.0",
+    "joi": "^17.9.2",
+    "winston": "^3.9.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "express-openapi-validator": "^5.0.4",
+    "uuid": "^9.0.0",
+    "moment": "^2.29.4",
+    "lodash": "^4.17.21",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.1",
+    "supertest": "^6.3.3",
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "@types/jest": "^29.5.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
+

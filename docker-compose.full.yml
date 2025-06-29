@@ -1,0 +1,83 @@
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: prevhub-postgres
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: unless-stopped
+    networks:
+      - prevhub-network
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: prevhub-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: unless-stopped
+    networks:
+      - prevhub-network
+
+  # Backend Node.js API
+  backend:
+    build: ./backend
+    container_name: prevhub-backend
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - prevhub-network
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+
+  # Frontend React
+  frontend:
+    build: ./frontend
+    container_name: prevhub-frontend
+    env_file: .env
+    ports:
+      - "127.0.0.1:3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - prevhub-network
+
+  # Reverse Proxy Nginx avec HTTPS
+  nginx:
+    image: nginx:alpine
+    container_name: prevhub-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/ssl/certs/prevhub.crt:/etc/ssl/certs/prevhub.crt
+      - /etc/ssl/private/prevhub.key:/etc/ssl/private/prevhub.key
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+    networks:
+      - prevhub-network
+
+volumes:
+  postgres_data:
+
+networks:
+  prevhub-network:
+    driver: bridge
