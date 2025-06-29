@@ -43,16 +43,19 @@ const adminNavigation = [
 
 function NavigationItem({ item, isMobile = false, onClick }) {
   const location = useLocation()
-  const isActive = location.pathname.startsWith(item.href)
+  const navigate = useNavigate()
+  const isActive = location.pathname === item.href
+  
+  const handleClick = () => {
+    navigate(item.href)
+    if (onClick) onClick()
+  }
   
   return (
     <Button
       variant={isActive ? "secondary" : "ghost"}
       className={`w-full justify-start ${isMobile ? 'text-base' : ''}`}
-      onClick={() => {
-        window.location.href = item.href
-        if (onClick) onClick()
-      }}
+      onClick={handleClick}
     >
       <item.icon className="mr-2 h-4 w-4" />
       {item.name}
@@ -68,7 +71,7 @@ function Sidebar({ className = "" }) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mb-4">
-            <h1 className="text-2xl font-bold text-primary">PrevHub</h1>
+            <h1 className="text-2xl font-bold text-primary">🔥 PrevHub</h1>
             <p className="text-sm text-muted-foreground">Prévéris ERP</p>
           </div>
           <div className="space-y-1">
@@ -198,4 +201,3 @@ export default function Layout() {
     </div>
   )
 }
-

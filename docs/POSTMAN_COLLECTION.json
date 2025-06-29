@@ -1,0 +1,719 @@
+{
+  "info": {
+    "name": "PrevHub API",
+    "description": "Collection Postman pour l'API PrevHub - Système ERP Prévéris",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentification",
+      "item": [
+        {
+          "name": "Connexion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.token);",
+                  "    pm.test('Token JWT récupéré', function () {",
+                  "        pm.expect(response.token).to.be.a('string');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@preveris.fr\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Informations utilisateur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Déconnexion",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Utilisateurs",
+      "item": [
+        {
+          "name": "Liste des utilisateurs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Créer un utilisateur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nouveau@preveris.fr\",\n  \"password\": \"password123\",\n  \"first_name\": \"Nouveau\",\n  \"last_name\": \"Utilisateur\",\n  \"phone\": \"01.23.45.67.89\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Détails d'un utilisateur",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Projets",
+      "item": [
+        {
+          "name": "Liste des projets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/projects?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["projects"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "IN_PROGRESS",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "ERP",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Créer un projet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('project_id', response.project.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nouveau Projet ERP\",\n  \"description\": \"Audit de sécurité incendie complet\",\n  \"organization_id\": \"{{organization_id}}\",\n  \"type\": \"ERP\",\n  \"priority\": \"HIGH\",\n  \"start_date\": \"2024-01-15\",\n  \"due_date\": \"2024-03-15\",\n  \"budget\": 15000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects",
+              "host": ["{{base_url}}"],
+              "path": ["projects"]
+            }
+          }
+        },
+        {
+          "name": "Détails d'un projet",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "{{project_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Modifier un projet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"priority\": \"URGENT\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "{{project_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏢 Organisations",
+      "item": [
+        {
+          "name": "Liste des organisations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizations?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["organizations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Créer une organisation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('organization_id', response.organization.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nouvelle Entreprise SARL\",\n  \"siret\": \"12345678901234\",\n  \"address\": \"123 Rue de l'Exemple\",\n  \"city\": \"Paris\",\n  \"postal_code\": \"75001\",\n  \"phone\": \"01.23.45.67.89\",\n  \"email\": \"contact@nouvelle-entreprise.fr\",\n  \"website\": \"https://www.nouvelle-entreprise.fr\",\n  \"primary_contact\": {\n    \"first_name\": \"Jean\",\n    \"last_name\": \"Dupont\",\n    \"email\": \"jean.dupont@nouvelle-entreprise.fr\",\n    \"phone\": \"01.23.45.67.89\",\n    \"position\": \"Directeur\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/organizations",
+              "host": ["{{base_url}}"],
+              "path": ["organizations"]
+            }
+          }
+        },
+        {
+          "name": "Détails d'une organisation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizations/{{organization_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["organizations", "{{organization_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Ajouter un contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Marie\",\n  \"last_name\": \"Martin\",\n  \"email\": \"marie.martin@nouvelle-entreprise.fr\",\n  \"phone\": \"01.23.45.67.90\",\n  \"position\": \"Responsable Sécurité\",\n  \"is_primary\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/organizations/{{organization_id}}/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["organizations", "{{organization_id}}", "contacts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📄 Documents",
+      "item": [
+        {
+          "name": "Liste des documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"],
+              "query": [
+                {
+                  "key": "project_id",
+                  "value": "{{project_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "NOTICE",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload de documents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.documents && response.documents.length > 0) {",
+                  "        pm.collectionVariables.set('document_id', response.documents[0].id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "project_id",
+                  "value": "{{project_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "NOTICE",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/documents/upload",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "upload"]
+            }
+          }
+        },
+        {
+          "name": "Télécharger un document",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/download",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "{{document_id}}", "download"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "✅ Tâches",
+      "item": [
+        {
+          "name": "Liste des tâches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"],
+              "query": [
+                {
+                  "key": "project_id",
+                  "value": "{{project_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "TODO",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Créer une tâche",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('task_id', response.task.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Analyser les plans d'évacuation\",\n  \"description\": \"Vérifier la conformité des plans d'évacuation selon les normes en vigueur\",\n  \"project_id\": \"{{project_id}}\",\n  \"priority\": \"HIGH\",\n  \"due_date\": \"2024-02-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"]
+            }
+          }
+        },
+        {
+          "name": "Modifier une tâche",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"priority\": \"URGENT\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tasks", "{{task_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🤖 Intelligence Artificielle",
+      "item": [
+        {
+          "name": "Analyser un document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document_id\": \"{{document_id}}\",\n  \"analysis_type\": \"NOTICE_REVIEW\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/analyze-document",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "analyze-document"]
+            }
+          }
+        },
+        {
+          "name": "Chat avec l'IA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Quelles sont les principales normes de sécurité incendie pour les ERP ?\",\n  \"context\": \"Audit de sécurité incendie\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/chat",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "chat"]
+            }
+          }
+        },
+        {
+          "name": "Modèles IA disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ai/models",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "models"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Tableau de bord",
+      "item": [
+        {
+          "name": "Statistiques générales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Données des graphiques",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/charts?period=30",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "charts"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Devis",
+      "item": [
+        {
+          "name": "Liste des devis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/quotes",
+              "host": ["{{base_url}}"],
+              "path": ["quotes"]
+            }
+          }
+        },
+        {
+          "name": "Créer un devis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('quote_id', response.quote.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_id\": \"{{project_id}}\",\n  \"organization_id\": \"{{organization_id}}\",\n  \"valid_until\": \"2024-02-01\",\n  \"lines\": [\n    {\n      \"description\": \"Audit de sécurité incendie complet\",\n      \"quantity\": 1,\n      \"unit_price\": 2500.00\n    },\n    {\n      \"description\": \"Rapport de conformité\",\n      \"quantity\": 1,\n      \"unit_price\": 500.00\n    },\n    {\n      \"description\": \"Plan d'évacuation personnalisé\",\n      \"quantity\": 3,\n      \"unit_price\": 150.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/quotes",
+              "host": ["{{base_url}}"],
+              "path": ["quotes"]
+            }
+          }
+        },
+        {
+          "name": "Détails d'un devis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/quotes/{{quote_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["quotes", "{{quote_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧾 Factures",
+      "item": [
+        {
+          "name": "Liste des factures",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices",
+              "host": ["{{base_url}}"],
+              "path": ["invoices"]
+            }
+          }
+        },
+        {
+          "name": "Créer facture depuis devis",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/from-quote/{{quote_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "from-quote", "{{quote_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,6 +10,8 @@ import { Plus, Search, FolderOpen } from 'lucide-react'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 function ProjectCard({ project }) {
+  const navigate = useNavigate()
+  
   const statusColors = {
     'DRAFT': 'bg-gray-100 text-gray-800',
     'IN_PROGRESS': 'bg-blue-100 text-blue-800',
@@ -23,8 +26,13 @@ function ProjectCard({ project }) {
     'ACCESSIBILITE': 'bg-cyan-100 text-cyan-800'
   }
 
+  const handleClick = () => {
+    // Pour l'instant, on peut juste afficher les détails ou naviguer vers une page de détail
+    console.log('Projet sélectionné:', project)
+  }
+
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer">
+    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleClick}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -71,6 +79,7 @@ function ProjectCard({ project }) {
 
 export default function Projects() {
   const { apiRequest } = useAuth()
+  const navigate = useNavigate()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -97,6 +106,12 @@ export default function Projects() {
     fetchProjects()
   }, [apiRequest, search, statusFilter, typeFilter])
 
+  const handleCreateProject = () => {
+    // Pour l'instant, on peut juste afficher un message ou ouvrir un modal
+    console.log('Créer un nouveau projet')
+    // navigate('/projects/new') // Quand la page sera créée
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -115,7 +130,7 @@ export default function Projects() {
             Gérez vos projets de prévention incendie et accessibilité
           </p>
         </div>
-        <Button>
+        <Button onClick={handleCreateProject}>
           <Plus className="h-4 w-4 mr-2" />
           Nouveau projet
         </Button>
@@ -183,7 +198,7 @@ export default function Projects() {
                 ? 'Aucun projet ne correspond à vos critères de recherche.'
                 : 'Commencez par créer votre premier projet.'}
             </p>
-            <Button>
+            <Button onClick={handleCreateProject}>
               <Plus className="h-4 w-4 mr-2" />
               Créer un projet
             </Button>
@@ -193,4 +208,3 @@ export default function Projects() {
     </div>
   )
 }
-

@@ -1,0 +1,1018 @@
+openapi: 3.0.3
+info:
+  title: PrevHub API
+  description: |
+    API RESTful pour le système ERP PrevHub spécialisé en prévention incendie et accessibilité.
+    
+    ## Authentification
+    Toutes les routes (sauf `/auth/login`) nécessitent un token JWT dans l'en-tête Authorization :
+    ```
+    Authorization: Bearer <token>
+    ```
+    
+    ## Codes de réponse
+    - 200: Succès
+    - 201: Créé avec succès
+    - 400: Requête invalide
+    - 401: Non authentifié
+    - 403: Accès interdit
+    - 404: Ressource non trouvée
+    - 409: Conflit
+    - 422: Erreur de validation
+    - 500: Erreur serveur
+  version: 1.0.0
+  contact:
+    name: Support PrevHub
+    email: support@preveris.fr
+  license:
+    name: Propriétaire
+servers:
+  - url: http://localhost:3000/api
+    description: Serveur de développement
+  - url: https://api.prevhub.preveris.fr
+    description: Serveur de production
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [admin, manager, commercial, preventionist, user]
+        is_active:
+          type: boolean
+        last_login:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        siret:
+          type: string
+          pattern: '^[0-9]{14}$'
+        address:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+          pattern: '^[0-9]{5}$'
+        country:
+          type: string
+          default: France
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        website:
+          type: string
+          format: uri
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        contact_id:
+          type: string
+          format: uuid
+        assigned_user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [ERP, IGH, ACCESSIBILITE]
+        status:
+          type: string
+          enum: [DRAFT, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED]
+          default: DRAFT
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          default: MEDIUM
+        start_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+        completion_date:
+          type: string
+          format: date
+        budget:
+          type: number
+          format: decimal
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+        uploaded_by:
+          type: string
+          format: uuid
+        name:
+          type: string
+        original_name:
+          type: string
+        file_path:
+          type: string
+        file_size:
+          type: integer
+        mime_type:
+          type: string
+        type:
+          type: string
+          enum: [NOTICE, PLAN, RAPPORT, DEVIS, FACTURE, DOCUMENT]
+        ai_analysis_status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, FAILED]
+          default: PENDING
+        ai_analysis_result:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+        assigned_to:
+          type: string
+          format: uuid
+        created_by:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, REVIEW, DONE]
+          default: TODO
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          default: MEDIUM
+        due_date:
+          type: string
+          format: date
+        completed_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Quote:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        quote_number:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED]
+          default: DRAFT
+        total_amount:
+          type: number
+          format: decimal
+        tax_amount:
+          type: number
+          format: decimal
+        valid_until:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        details:
+          type: object
+        validation:
+          type: array
+          items:
+            type: object
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        pages:
+          type: integer
+
+paths:
+  # Authentification
+  /auth/login:
+    post:
+      tags:
+        - Authentification
+      summary: Connexion utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Identifiants invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentification
+      summary: Déconnexion utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Déconnexion réussie
+
+  /auth/me:
+    get:
+      tags:
+        - Authentification
+      summary: Informations utilisateur connecté
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Informations utilisateur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  # Utilisateurs
+  /users:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Liste des utilisateurs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [admin, manager, commercial, preventionist, user]
+        - name: active
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags:
+        - Utilisateurs
+      summary: Créer un utilisateur
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - first_name
+                - last_name
+                - role
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                phone:
+                  type: string
+                role:
+                  type: string
+                  enum: [admin, manager, commercial, preventionist, user]
+      responses:
+        '201':
+          description: Utilisateur créé avec succès
+
+  /users/{id}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Détails d'un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Détails de l'utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - Utilisateurs
+      summary: Modifier un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Utilisateur modifié avec succès
+
+    delete:
+      tags:
+        - Utilisateurs
+      summary: Supprimer un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Utilisateur supprimé avec succès
+
+  # Projets
+  /projects:
+    get:
+      tags:
+        - Projets
+      summary: Liste des projets
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [ERP, IGH, ACCESSIBILITE]
+        - name: assigned_to
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Liste des projets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags:
+        - Projets
+      summary: Créer un projet
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - organization_id
+                - type
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                organization_id:
+                  type: string
+                  format: uuid
+                contact_id:
+                  type: string
+                  format: uuid
+                assigned_user_id:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                  enum: [ERP, IGH, ACCESSIBILITE]
+                priority:
+                  type: string
+                  enum: [LOW, MEDIUM, HIGH, URGENT]
+                start_date:
+                  type: string
+                  format: date
+                due_date:
+                  type: string
+                  format: date
+                budget:
+                  type: number
+                  format: decimal
+      responses:
+        '201':
+          description: Projet créé avec succès
+
+  /projects/{id}:
+    get:
+      tags:
+        - Projets
+      summary: Détails d'un projet
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Détails du projet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+    put:
+      tags:
+        - Projets
+      summary: Modifier un projet
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Projet modifié avec succès
+
+    delete:
+      tags:
+        - Projets
+      summary: Supprimer un projet
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Projet supprimé avec succès
+
+  # Organisations
+  /organizations:
+    get:
+      tags:
+        - Organisations
+      summary: Liste des organisations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: active
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Liste des organisations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  organizations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags:
+        - Organisations
+      summary: Créer une organisation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                siret:
+                  type: string
+                  pattern: '^[0-9]{14}$'
+                address:
+                  type: string
+                city:
+                  type: string
+                postal_code:
+                  type: string
+                  pattern: '^[0-9]{5}$'
+                country:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                website:
+                  type: string
+                  format: uri
+                primary_contact:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      type: string
+                    position:
+                      type: string
+      responses:
+        '201':
+          description: Organisation créée avec succès
+
+  # Documents
+  /documents:
+    get:
+      tags:
+        - Documents
+      summary: Liste des documents
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: project_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [NOTICE, PLAN, RAPPORT, DEVIS, FACTURE]
+      responses:
+        '200':
+          description: Liste des documents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+
+  /documents/upload:
+    post:
+      tags:
+        - Documents
+      summary: Upload de documents
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - files
+                - project_id
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                project_id:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                  enum: [NOTICE, PLAN, RAPPORT, DEVIS, FACTURE]
+      responses:
+        '201':
+          description: Documents uploadés avec succès
+
+  /documents/{id}/download:
+    get:
+      tags:
+        - Documents
+      summary: Télécharger un document
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Fichier téléchargé
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+  # Intelligence Artificielle
+  /ai/analyze-document:
+    post:
+      tags:
+        - Intelligence Artificielle
+      summary: Analyser un document avec IA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - document_id
+                - analysis_type
+              properties:
+                document_id:
+                  type: string
+                  format: uuid
+                analysis_type:
+                  type: string
+                  enum: [NOTICE_REVIEW, DOCUMENT_CLASSIFICATION, CONTENT_EXTRACTION]
+      responses:
+        '200':
+          description: Analyse terminée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  analysis:
+                    type: object
+                  result:
+                    type: string
+
+  /ai/chat:
+    post:
+      tags:
+        - Intelligence Artificielle
+      summary: Chat avec l'IA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000
+                context:
+                  type: string
+      responses:
+        '200':
+          description: Réponse de l'IA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                  model:
+                    type: string
+
+  /ai/models:
+    get:
+      tags:
+        - Intelligence Artificielle
+      summary: Statut des modèles IA
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des modèles disponibles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  models:
+                    type: array
+                    items:
+                      type: object
+                  status:
+                    type: string
+
+  # Tableau de bord
+  /dashboard/stats:
+    get:
+      tags:
+        - Tableau de bord
+      summary: Statistiques du tableau de bord
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Statistiques générales
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stats:
+                    type: object
+                  recent_projects:
+                    type: array
+                  urgent_tasks:
+                    type: array
+                  recent_activity:
+                    type: array
+
+  /dashboard/charts:
+    get:
+      tags:
+        - Tableau de bord
+      summary: Données pour les graphiques
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Données des graphiques
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects_evolution:
+                    type: array
+                  projects_by_type:
+                    type: array
+                  workload_by_user:
+                    type: array

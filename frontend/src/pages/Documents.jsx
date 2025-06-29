@@ -25,6 +25,16 @@ function DocumentCard({ document }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
+  const handleView = (e) => {
+    e.stopPropagation()
+    console.log('Voir le document:', document)
+  }
+
+  const handleDownload = (e) => {
+    e.stopPropagation()
+    console.log('Télécharger le document:', document)
+  }
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader>
@@ -55,11 +65,11 @@ function DocumentCard({ document }) {
             Uploadé par: {document.uploaded_by_first_name} {document.uploaded_by_last_name}
           </p>
           <div className="flex gap-2 pt-2">
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" onClick={handleView}>
               <Eye className="h-4 w-4 mr-1" />
               Voir
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" onClick={handleDownload}>
               <Download className="h-4 w-4 mr-1" />
               Télécharger
             </Button>
@@ -100,6 +110,10 @@ export default function Documents() {
     doc.project_name?.toLowerCase().includes(search.toLowerCase())
   )
 
+  const handleUpload = () => {
+    console.log('Uploader des documents')
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -115,7 +129,7 @@ export default function Documents() {
           <h1 className="text-3xl font-bold text-gray-900">Documents</h1>
           <p className="text-gray-600">Gérez vos documents et fichiers</p>
         </div>
-        <Button>
+        <Button onClick={handleUpload}>
           <Upload className="h-4 w-4 mr-2" />
           Uploader des documents
         </Button>
@@ -168,7 +182,7 @@ export default function Documents() {
             <p className="text-gray-500 text-center mb-4">
               Commencez par uploader vos premiers documents.
             </p>
-            <Button>
+            <Button onClick={handleUpload}>
               <Upload className="h-4 w-4 mr-2" />
               Uploader des documents
             </Button>
@@ -178,4 +192,3 @@ export default function Documents() {
     </div>
   )
 }
-
