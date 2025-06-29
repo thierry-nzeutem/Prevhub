@@ -17,8 +17,12 @@ function UserCard({ user }) {
     'user': 'bg-gray-100 text-gray-800'
   }
 
+  const handleClick = () => {
+    console.log('Utilisateur sélectionné:', user)
+  }
+
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleClick}>
       <CardHeader>
         <div className="flex items-start gap-4">
           <Avatar className="h-12 w-12">
@@ -93,6 +97,10 @@ export default function Users() {
     user.email.toLowerCase().includes(search.toLowerCase())
   )
 
+  const handleCreateUser = () => {
+    console.log('Créer un nouvel utilisateur')
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -108,7 +116,7 @@ export default function Users() {
           <h1 className="text-3xl font-bold text-gray-900">Utilisateurs</h1>
           <p className="text-gray-600">Gérez les utilisateurs de l'application</p>
         </div>
-        <Button>
+        <Button onClick={handleCreateUser}>
           <Plus className="h-4 w-4 mr-2" />
           Nouvel utilisateur
         </Button>
@@ -144,7 +152,7 @@ export default function Users() {
             <p className="text-gray-500 text-center mb-4">
               Commencez par ajouter des utilisateurs à l'application.
             </p>
-            <Button>
+            <Button onClick={handleCreateUser}>
               <Plus className="h-4 w-4 mr-2" />
               Ajouter un utilisateur
             </Button>
@@ -154,4 +162,3 @@ export default function Users() {
     </div>
   )
 }
-

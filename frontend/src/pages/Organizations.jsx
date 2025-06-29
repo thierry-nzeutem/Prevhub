@@ -7,8 +7,12 @@ import { Plus, Search, Building2, MapPin, Phone, Mail } from 'lucide-react'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 function OrganizationCard({ organization }) {
+  const handleClick = () => {
+    console.log('Organisation sélectionnée:', organization)
+  }
+
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer">
+    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleClick}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
@@ -71,6 +75,10 @@ export default function Organizations() {
     fetchOrganizations()
   }, [apiRequest, search])
 
+  const handleCreateOrganization = () => {
+    console.log('Créer une nouvelle organisation')
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -86,7 +94,7 @@ export default function Organizations() {
           <h1 className="text-3xl font-bold text-gray-900">Organisations</h1>
           <p className="text-gray-600">Gérez vos clients et partenaires</p>
         </div>
-        <Button>
+        <Button onClick={handleCreateOrganization}>
           <Plus className="h-4 w-4 mr-2" />
           Nouvelle organisation
         </Button>
@@ -122,7 +130,7 @@ export default function Organizations() {
             <p className="text-gray-500 text-center mb-4">
               Commencez par ajouter vos clients et partenaires.
             </p>
-            <Button>
+            <Button onClick={handleCreateOrganization}>
               <Plus className="h-4 w-4 mr-2" />
               Ajouter une organisation
             </Button>
@@ -132,4 +140,3 @@ export default function Organizations() {
     </div>
   )
 }
-

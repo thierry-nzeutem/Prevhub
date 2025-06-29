@@ -25,8 +25,12 @@ function TaskCard({ task }) {
 
   const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'DONE'
 
+  const handleClick = () => {
+    console.log('Tâche sélectionnée:', task)
+  }
+
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleClick}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -108,6 +112,10 @@ export default function Tasks() {
     return matchesSearch && matchesPriority
   })
 
+  const handleCreateTask = () => {
+    console.log('Créer une nouvelle tâche')
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -123,7 +131,7 @@ export default function Tasks() {
           <h1 className="text-3xl font-bold text-gray-900">Tâches</h1>
           <p className="text-gray-600">Gérez vos tâches et suivez leur progression</p>
         </div>
-        <Button>
+        <Button onClick={handleCreateTask}>
           <Plus className="h-4 w-4 mr-2" />
           Nouvelle tâche
         </Button>
@@ -187,7 +195,7 @@ export default function Tasks() {
             <p className="text-gray-500 text-center mb-4">
               Commencez par créer votre première tâche.
             </p>
-            <Button>
+            <Button onClick={handleCreateTask}>
               <Plus className="h-4 w-4 mr-2" />
               Créer une tâche
             </Button>
@@ -197,4 +205,3 @@ export default function Tasks() {
     </div>
   )
 }
-
